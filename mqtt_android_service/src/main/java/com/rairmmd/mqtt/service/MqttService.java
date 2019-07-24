@@ -252,8 +252,7 @@ public class MqttService extends Service implements MqttTraceHandler {
      * @param status       OK or Error
      * @param dataBundle   the data to be passed
      */
-    void callbackToActivity(String clientHandle, Status status,
-                            Bundle dataBundle) {
+    void callbackToActivity(String clientHandle, Status status, Bundle dataBundle) {
         // Don't call traceDebug, as it will try to callbackToActivity leading
         // to recursion.
         Intent callbackIntent = new Intent(
@@ -576,8 +575,9 @@ public class MqttService extends Service implements MqttTraceHandler {
 
         unregisterBroadcastReceivers();
 
-        if (this.messageStore != null)
-            this.messageStore.close();
+        if (messageStore != null) {
+            messageStore.close();
+        }
 
         super.onDestroy();
     }
@@ -590,8 +590,7 @@ public class MqttService extends Service implements MqttTraceHandler {
         // What we pass back to the Activity on binding -
         // a reference to ourself, and the activityToken
         // we were given when started
-        String activityToken = intent
-                .getStringExtra(MqttServiceConstants.CALLBACK_ACTIVITY_TOKEN);
+        String activityToken = intent.getStringExtra(MqttServiceConstants.CALLBACK_ACTIVITY_TOKEN);
         mqttServiceBinder.setActivityToken(activityToken);
         return mqttServiceBinder;
     }
@@ -691,7 +690,6 @@ public class MqttService extends Service implements MqttTraceHandler {
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void registerBroadcastReceivers() {
         if (networkConnectionMonitor == null) {
             networkConnectionMonitor = new NetworkConnectionIntentReceiver();
@@ -741,8 +739,7 @@ public class MqttService extends Service implements MqttTraceHandler {
             // by requesting a wake lock - we request the minimum possible wake
             // lock - just enough to keep the CPU running until we've finished
             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            WakeLock wl = pm
-                    .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
+            WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MQTT");
             wl.acquire();
             traceDebug(TAG, "Reconnect for Network recovery.");
             if (isOnline()) {
@@ -765,10 +762,7 @@ public class MqttService extends Service implements MqttTraceHandler {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         //noinspection RedundantIfStatement
-        if (networkInfo != null
-                && networkInfo.isAvailable()
-                && networkInfo.isConnected()
-                && backgroundDataEnabled) {
+        if (networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected() && backgroundDataEnabled) {
             return true;
         }
 
