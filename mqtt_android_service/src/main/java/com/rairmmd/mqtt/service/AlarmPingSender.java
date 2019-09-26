@@ -122,8 +122,7 @@ class AlarmPingSender implements MqttPingSender {
 
             Log.d(TAG, "Sending Ping at:" + System.currentTimeMillis());
 
-            PowerManager pm = (PowerManager) service
-                    .getSystemService(Service.POWER_SERVICE);
+            PowerManager pm = (PowerManager) service.getSystemService(Service.POWER_SERVICE);
             wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, wakeLockTag);
             wakelock.acquire();
 
@@ -134,8 +133,7 @@ class AlarmPingSender implements MqttPingSender {
 
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Log.d(TAG, "Success. Release lock(" + wakeLockTag + "):"
-                            + System.currentTimeMillis());
+                    Log.d(TAG, "Success. Release lock(" + wakeLockTag + "):" + System.currentTimeMillis());
                     //Release wakelock when it is done.
                     wakelock.release();
                 }
